@@ -19,11 +19,13 @@ class MovieBody extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset(
-              movie.backdrop,
+            Image(
+              image: NetworkImage(
+                movie.backdropUrl,
+              ),
             ),
             MovieInfo(
-              poster: movie.poster,
+              poster: movie.posterUrl,
               originalTitle: movie.originalTitle,
               overview: movie.overview,
               releaseDate: movie.movieReleaseDate,
@@ -31,7 +33,8 @@ class MovieBody extends StatelessWidget {
             LikeAndRating(
               voteAverage: movie.voteAverage,
             ),
-            MovieGenres(movieGenres: movie.genres,
+            MovieGenres(
+              movieGenres: movie.genres,
             ),
           ],
         ),

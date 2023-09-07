@@ -26,10 +26,13 @@ class MovieInfo extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(borderRadius),
-          child: Image.asset(
-            poster,
+          child: SizedBox(
             width: posterWidth,
-            fit: BoxFit.cover,
+            child: Image(
+              image: NetworkImage(
+                poster,
+              ),
+            ),
           ),
         ),
         Expanded(
