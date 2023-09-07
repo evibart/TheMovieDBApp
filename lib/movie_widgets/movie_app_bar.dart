@@ -17,8 +17,12 @@ class MovieAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: kToolbarHeight,
       title: Text(movieTitle),
       leading: IconButton(
-        onPressed: () {},
-        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: const Icon(
+          Icons.arrow_back,
+        ),
       ),
     );
   }
