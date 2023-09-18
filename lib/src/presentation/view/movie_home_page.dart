@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '/movie_widgets/movie_app_bar.dart';
-import '/movie_widgets/movie_body.dart';
 
-import '/data_classes/movie.dart';
+import '../../domain/entity/movie.dart';
+import '../widget/movie_info_screen/movie_app_bar.dart';
+import '../widget/movie_info_screen/movie_body.dart';
+
 
 class MovieHomePage extends StatelessWidget {
   const MovieHomePage({super.key});

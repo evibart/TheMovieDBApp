@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '/repositories_i/repository_i.dart';
-import '/data_classes/genre.dart';
-import '/constants/constants.dart';
 
-import '/repositories/genres_local_repository.dart';
+import '../../../core/util/constants.dart';
+import '../../../data/repository/genres_local_repository.dart';
+import '../../../domain/entity/genre.dart';
+import '../../../domain/repository/repository_i.dart';
 
 class MovieGenres extends StatefulWidget {
   final List<int> movieGenres;

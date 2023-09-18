@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/util/constants.dart';
 import 'like_button.dart';
-import '/constants/constants.dart';
 
 class LikeAndRating extends StatelessWidget {
   final double voteAverage;

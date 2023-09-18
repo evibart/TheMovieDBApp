@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '/screens/movie_home_page.dart';
-import '/constants/constants.dart';
 
-import '/data_classes/movie.dart';
+import '../../../core/util/constants.dart';
+import '../../../domain/entity/movie.dart';
+import '../../view/movie_home_page.dart';
 
 class MovieList extends StatelessWidget {
   final List<Movie> moviesList;
