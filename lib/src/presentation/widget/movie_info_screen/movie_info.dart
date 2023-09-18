@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/constants/constants.dart';
+import '../../../core/util/constants.dart';
 
 class MovieInfo extends StatelessWidget {
   final String poster;

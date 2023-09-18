@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../domain/entity/movie.dart';
 import 'likes_rating.dart';
-import '/data_classes/movie.dart';
 import 'movie_genres.dart';
 import 'movie_info.dart';
 

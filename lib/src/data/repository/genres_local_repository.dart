@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-import '/data_classes/genre.dart';
-import '/repositories_i/repository_i.dart';
+import '../../domain/entity/genre.dart';
+import '../../domain/repository/repository_i.dart';
 
 class GenreLocalRepository implements IRepository<List<Genre>> {
   static const String _jsonGenresPath = 'mock_data/genres.json';

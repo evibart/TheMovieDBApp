@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 
-import '/repositories_i/repository_i.dart';
-import '/data_classes/movie.dart';
+import '../../domain/entity/movie.dart';
+import '../../domain/repository/repository_i.dart';
 
 class MovieLocalRepository implements IRepository<List<Movie>> {
   static const String _jsonMoviesPath = 'mock_data/movies.json';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '/movie_list_widgets/movie_list.dart';
-import '/repositories/movie_local_repository.dart';
-import '/repositories_i/repository_i.dart';
+import '../../data/repository/movie_local_repository.dart';
+import '../../domain/entity/movie.dart';
+import '../../domain/repository/repository_i.dart';
+import '../widget/home_screen/movie_list.dart';
 
-import '/data_classes/movie.dart';
 
 class MovieListHome extends StatefulWidget {
   const MovieListHome({super.key});
