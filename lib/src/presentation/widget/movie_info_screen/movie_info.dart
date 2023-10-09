@@ -41,6 +41,7 @@ class MovieInfo extends StatelessWidget {
             child: Column(
               children: [
                 Text(
+                  key: Key(Constants.originalTitleKey),
                   originalTitle,
                   style: const TextStyle(
                     fontSize: titleFont,
@@ -48,10 +49,14 @@ class MovieInfo extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: sizedBoxHeight),
-                Text(overview),
+                Text(
+                  key: Key(Constants.overviewKey),
+                  overview,
+                ),
                 const SizedBox(height: sizedBoxHeight),
                 Text(
                   'Release Date: $releaseDate',
+                  key: Key(Constants.releaseDateKey),
                   style: const TextStyle(fontSize: Constants.textFont),
                 ),
               ],

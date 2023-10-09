@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/util/constants.dart';
-import '../../../data/repository/genres_local_repository.dart';
-import '../../../domain/entity/genre.dart';
-import '../../../domain/repository/repository_i.dart';
+import '../../../domain/entity/genre_entity.dart';
+import '../../bloc/genre_bloc.dart';
 
 class MovieGenres extends StatefulWidget {
   final List<int> movieGenres;
+  final GenreBloc blocGenreList;
 
   const MovieGenres({
     super.key,
     required this.movieGenres,
+    required this.blocGenreList,
   });
 
-  List<String> linkGenres(List<Genre> genresMap) {
+  List<String> linkGenres(List<GenreEntity> genresMap) {
     return genresMap
         .where((genre) => movieGenres.contains(genre.id))
         .map((genre) => genre.name)
@@ -25,27 +26,32 @@ class MovieGenres extends StatefulWidget {
 }
 
 class _MovieGenresState extends State<MovieGenres> {
-  final IRepository<List<Genre>> genreRepository = GenreLocalRepository();
-  late Future<List<Genre>> genresList;
+  late Future<List<GenreEntity>> genresList;
 
   @override
   initState() {
     super.initState();
-    genresList = genreRepository.loadData();
+    widget.blocGenreList.fetchGenres();
+  }
+
+  @override
+  void dispose() {
+    widget.blocGenreList.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Genre>>(
-      future: genresList,
+    return StreamBuilder<List<GenreEntity>>(
+      stream: widget.blocGenreList.allGenres,
       builder: (
         BuildContext context,
-        AsyncSnapshot<List<Genre>> snapshot,
+        AsyncSnapshot<List<GenreEntity>> snapshot,
       ) {
         if (snapshot.hasError) {
           return Center(
             child: Text(
-              "${snapshot.error}",
+              snapshot.error.toString(),
             ),
           );
         } else if (snapshot.hasData) {
