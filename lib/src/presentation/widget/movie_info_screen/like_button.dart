@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/util/constants.dart';
+
 class LikeButton extends StatefulWidget {
   const LikeButton({
     super.key,
@@ -15,6 +17,7 @@ class _LikeButton extends State<LikeButton> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
+      key: Key(Constants.likeButtonKey),
       onPressed: () {
         likes++;
         setState(() {});
