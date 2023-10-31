@@ -20,7 +20,7 @@ void main() async {
     late GenreBloc _blocGenreList;
     setUp(() {
       _blocGenreList = GenreBloc(
-          genreListUseCase: GenreUseCase(
+          genreUseCase: GenreUseCase(
               genreRepository:
                   GenreRemoteRepository(apiService: ApiService())));
     });
@@ -70,7 +70,7 @@ void main() async {
 
     setUp(() {
       mockListUseCase = MockListUseCase();
-      bloc = GenreBloc(genreListUseCase: mockListUseCase);
+      bloc = GenreBloc(genreUseCase: mockListUseCase);
     });
 
     test('fetchGenres adds genres to stream on success', () {

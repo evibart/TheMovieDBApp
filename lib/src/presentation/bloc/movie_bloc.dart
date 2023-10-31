@@ -22,7 +22,7 @@ class MovieBloc implements IBloc {
 
   void fetchMovies(MovieEndpoint movieEndpoint) async =>
       await moviesUseCase.execute(movieEndpoint: movieEndpoint).fold(
-            (error) => _movieList.sink.addError(error),
+            (error) => _movieList.sink.addError(error.toString()),
             (movieList) => _movieList.sink.add(movieList),
           );
 

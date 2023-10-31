@@ -19,13 +19,14 @@ class ApiService {
       if (response.statusCode == HttpStatus.ok) {
         return Right((jsonDecode(response.body)['results'] as List<dynamic>)
             .map((data) => MovieModel.fromJson(data))
-            .map((movieModel) => MovieEntity.fromMovieModel(movieModel: movieModel))
+            .map((movieModel) =>
+                MovieEntity.fromMovieModel(movieModel: movieModel))
             .toList());
       } else {
         throw Exception('${response.statusCode} ${response.body}');
       }
     } catch (e) {
-      return Left(e.toString());
+      return Left(e as Exception);
     }
   }
 
@@ -43,7 +44,7 @@ class ApiService {
         throw Exception('${response.statusCode} ${response.body}');
       }
     } catch (e) {
-      return Left(e.toString());
+      return Left(e.toString() as Exception);
     }
   }
 }
