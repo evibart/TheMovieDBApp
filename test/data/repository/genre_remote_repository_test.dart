@@ -39,7 +39,7 @@ void main() {
 
       expect(
         result,
-        isA<Right<String, List<GenreEntity>>>(),
+        isA<Right<Exception, List<GenreEntity>>>(),
       );
       result.fold(
         (error) {
@@ -79,22 +79,23 @@ void main() {
     });
 
     test('loadGenres returns an error on failure', () async {
+      Exception exception = Exception('Error 404');
       when(() => mockApiService
               .getGenres('https://api.themoviedb.org/3/genre/movie/list'))
-          .thenAnswer((_) async => Left('Error 404'));
+          .thenAnswer((_) async => Left(exception));
 
       final result = await genreRemoteRepository.loadGenres();
 
       expect(
         result,
-        isA<Left<String, List<GenreEntity>>>(),
+        isA<Left<Exception, List<GenreEntity>>>(),
       );
       expect(
         result.fold(
           (error) => error,
           (_) => '',
         ),
-        'Error 404',
+        exception,
       );
     });
   });

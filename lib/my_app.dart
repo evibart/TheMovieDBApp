@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movie_db_app/splash_screen.dart';
 import 'package:movie_db_app/src/data/datasource/remote/api_service.dart';
 import 'package:movie_db_app/src/data/repository/movie_database_repository.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +23,13 @@ class MyApp extends StatelessWidget {
                   apiService: Provider.of<ApiService>(context))),
           Provider(
               create: (ctx) => MovieUseCase(
-                  movieRepository: Provider.of<MovieRemoteRepository>(ctx,listen: false,),
-                  movieDataBase: Provider.of<MovieDatabaseRepository>(context),)),
+                    movieRepository: Provider.of<MovieRemoteRepository>(
+                      ctx,
+                      listen: false,
+                    ),
+                    movieDataBase:
+                        Provider.of<MovieDatabaseRepository>(context),
+                  )),
         ],
         child: MaterialApp(
           theme: ThemeData(
@@ -33,14 +37,13 @@ class MyApp extends StatelessWidget {
             colorSchemeSeed: Colors.deepOrange,
             brightness: Brightness.dark,
           ),
-          initialRoute: SplashScreen.routeName,
+          initialRoute: MovieListHome.routeName,
           routes: {
             MovieListHome.routeName: (context) => MovieListHome(
                   movieBloc: MovieBloc(
                       moviesUseCase: Provider.of<MovieUseCase>(context)),
                 ),
             MovieHomePage.routeName: (context) => const MovieHomePage(),
-            SplashScreen.routeName:(context)=> SplashScreen(),
           },
         ));
   }

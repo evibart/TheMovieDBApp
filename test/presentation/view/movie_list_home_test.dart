@@ -22,11 +22,7 @@ void main() {
         originalLanguage: 'English',
         originalTitle: 'title',
         popularity: 200,
-        releaseDate: DateTime(
-          2023,
-          8,
-          9,
-        ),
+        releaseDate: '2023-8-9',
         title: 'title',
         hasVideo: false,
         voteCount: 200,
@@ -36,6 +32,7 @@ void main() {
         poster: '',
         backdrop: '',
         isAdult: false,
+        categories: [],
       ),
     ];
     await mockNetworkImagesFor(() => tester.pumpWidget(MaterialApp(

@@ -46,7 +46,7 @@ dependencies:
   floor: ^1.4.2
   connectivity_plus: ^5.0.1
   sqflite: ^2.3.0
-  flutter_native_splash: ^2.3.4
+  cached_network_image: ^3.3.0
 
 dev_dependencies:
   lint: ^2.0.0
@@ -105,8 +105,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-flutter_native_splash:
-  color: "#42a5f5"  # Background color
-  image: assets/mario_head.png
-  android: true
-  ios: true
+

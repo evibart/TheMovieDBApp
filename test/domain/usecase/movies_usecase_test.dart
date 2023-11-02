@@ -1,6 +1,8 @@
 import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:movie_db_app/src/data/datasource/local/app_database.dart';
+import 'package:movie_db_app/src/data/repository/movie_database_repository.dart';
 import '../../../lib/src/core/util/movie_enum.dart';
 import '../../../lib/src/domain/use_case/implementation/movie_use_case.dart';
 import '../../../lib/src/domain/use_case/movie_use_case_i.dart';
@@ -9,6 +11,8 @@ import '../../../lib/src/domain/repository/movie_repository_i.dart';
 
 class MockMovieRepository extends Mock implements IMovieRepository {}
 
+class MockDatabaseGenreRepository extends Mock implements AppDataBase {}
+
 void main() {
   group('Now playing movies List UseCase', () {
     late MovieUseCaseI movieListUseCase;
@@ -16,13 +20,16 @@ void main() {
 
     setUp(() {
       mockMovieRepository = MockMovieRepository();
-      movieListUseCase = MovieUseCase(movieRepository: mockMovieRepository);
+      movieListUseCase = MovieUseCase(
+          movieRepository: mockMovieRepository,
+          movieDataBase: MovieDatabaseRepository(
+              appDataBase: MockDatabaseGenreRepository()));
     });
 
     test('load returns a list of movies on success', () async {
       when(() => mockMovieRepository.loadMovies(
           movieEndpoint: MovieEndpoint.popular)).thenAnswer(
-        (_) async => Right<String, List<MovieEntity>>([
+        (_) async => Right<Exception, List<MovieEntity>>([
           MovieEntity(
             title: "The Super Mario Bros. Movie",
             originalTitle: "The Super Mario Bros. Movie",
@@ -31,11 +38,7 @@ void main() {
                 "transported down a mysterious pipe and wander into a magical new "
                 "world. But when the brothers are separated, Mario embarks on an epic "
                 "quest to find Luigi.",
-            releaseDate: DateTime(
-              2023,
-              4,
-              5,
-            ),
+            releaseDate: '2023-4-5-',
             voteAverage: 7.8,
             genres: [
               16,
@@ -52,6 +55,7 @@ void main() {
             voteCount: 300,
             isAdult: false,
             id: -1,
+            categories: [],
           )
         ]),
       );
@@ -76,11 +80,7 @@ void main() {
                     "transported down a mysterious pipe and wander into a magical new "
                     "world. But when the brothers are separated, Mario embarks on an epic "
                     "quest to find Luigi.",
-                releaseDate: DateTime(
-                  2023,
-                  4,
-                  5,
-                ),
+                releaseDate: '2023-4-5',
                 voteAverage: 7.8,
                 genres: [
                   16,
@@ -97,6 +97,7 @@ void main() {
                 voteCount: 300,
                 isAdult: false,
                 id: -1,
+                categories: [],
               )
             ],
           );
@@ -106,7 +107,7 @@ void main() {
     test('execute returns an empty list of movies on success', () async {
       when(() => mockMovieRepository.loadMovies(
           movieEndpoint: MovieEndpoint.popular)).thenAnswer(
-        (_) async => Right<String, List<MovieEntity>>([]),
+        (_) async => Right<Exception, List<MovieEntity>>([]),
       );
 
       final result =
@@ -131,7 +132,7 @@ void main() {
     test('execute returns an error on failure', () async {
       when(() => mockMovieRepository.loadMovies(
           movieEndpoint: MovieEndpoint.popular)).thenAnswer(
-        (_) async => Left<String, List<MovieEntity>>('Error 404'),
+        (_) async => Left<Exception, List<MovieEntity>>(Exception('Error 404')),
       );
 
       final result =

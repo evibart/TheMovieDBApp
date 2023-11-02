@@ -23,7 +23,11 @@ void main() {
         MovieEntity(
           isAdult: false,
           backdrop: "/xFYpUmB01nswPgbzi8EOCT1ZYFu.jpg",
-          genres: [28, 18, 12],
+          genres: [
+            28,
+            18,
+            12,
+          ],
           id: 980489,
           originalLanguage: "en",
           originalTitle: "Gran Turismo",
@@ -31,15 +35,12 @@ void main() {
               "The ultimate wish-fulfillment tale of a teenage Gran Turismo player whose gaming skills won him a series of Nissan competitions to become an actual professional racecar driver.",
           popularity: 3389.624,
           poster: "/51tqzRtKMMZEYUpSYkrUE7v9ehm.jpg",
-          releaseDate: DateTime(
-            2023,
-            08,
-            09,
-          ),
+          releaseDate: '2023-08-09',
           title: "Gran Turismo",
           hasVideo: false,
           voteAverage: 8,
           voteCount: 763,
+          categories: [],
         )
       ];
 
@@ -52,7 +53,7 @@ void main() {
 
       expect(
         result,
-        isA<Right<String, List<MovieEntity>>>(),
+        isA<Right<Exception, List<MovieEntity>>>(),
       );
       result.fold(
         (error) {
@@ -68,11 +69,7 @@ void main() {
                 originalTitle: "Gran Turismo",
                 overview:
                     "The ultimate wish-fulfillment tale of a teenage Gran Turismo player whose gaming skills won him a series of Nissan competitions to become an actual professional racecar driver.",
-                releaseDate: DateTime(
-                  2023,
-                  8,
-                  9,
-                ),
+                releaseDate: '2023-08-09',
                 voteAverage: 8,
                 genres: [28, 18, 12],
                 poster: "/51tqzRtKMMZEYUpSYkrUE7v9ehm.jpg",
@@ -82,6 +79,7 @@ void main() {
                 hasVideo: false,
                 voteCount: 763,
                 isAdult: false,
+                categories: [],
               )
             ],
           );
@@ -90,23 +88,24 @@ void main() {
     });
 
     test('load Popular Movies returns an error on failure', () async {
+      Exception exception = Exception('Error 404');
       when(() => mockApiService
               .getMovies('https://api.themoviedb.org/3/movie/popular'))
-          .thenAnswer((_) async => Left('Error 404'));
+          .thenAnswer((_) async => Left(exception));
 
       final result = await movieRemoteRepository.loadMovies(
           movieEndpoint: MovieEndpoint.popular);
 
       expect(
         result,
-        isA<Left<String, List<MovieEntity>>>(),
+        isA<Left<Exception, List<MovieEntity>>>(),
       );
       expect(
         result.fold(
           (error) => error,
           (_) => '',
         ),
-        'Error 404',
+        exception,
       );
     });
     test('load movies returns an empty list of movies on success', () async {
@@ -116,9 +115,9 @@ void main() {
           .thenAnswer((_) async => Right(movieData));
       final result = await movieRemoteRepository.loadMovies(
           movieEndpoint: MovieEndpoint.popular);
-      expect(result, isA<Right<String, List<MovieEntity>>>());
+      expect(result, isA<Right<Exception, List<MovieEntity>>>());
       result.fold((error) {
-        fail('Expected success, but got error: $error');
+        fail('Expected success, but got error: ${error.toString()}');
       }, (movies) {
         expect(
           movies,

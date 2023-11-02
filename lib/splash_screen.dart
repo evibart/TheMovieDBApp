@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:movie_db_app/my_app.dart';
-import 'package:movie_db_app/src/presentation/view/movie_list_home.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const String routeName = "/splash_screen";
-
   @override
   State<StatefulWidget> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
+  static const int splashScreenDuration = 3;
+  static const double splashImageSize = 100;
+  static const double splashSeparator = 20;
+  static const double splashFontSize = 40;
+  static const String splashImagePath = 'assets/mario_head.png';
+  static const String splashTitle = 'TMDB App';
+
   @override
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    Future.delayed(const Duration(seconds: 5), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => const MovieListHome()));
-    });
+    Future.delayed(
+        const Duration(seconds: splashScreenDuration), navigateToNextScreen);
   }
 
   @override
@@ -27,6 +29,11 @@ class _SplashScreenState extends State<SplashScreen>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
     super.dispose();
+  }
+
+  void navigateToNextScreen() {
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (_) => const MyApp()));
   }
 
   @override
@@ -37,25 +44,27 @@ class _SplashScreenState extends State<SplashScreen>
         decoration: const BoxDecoration(
             gradient: LinearGradient(
           colors: [
-            Colors.indigo,
-            Colors.orange,
+            Colors.blueAccent,
+            Colors.deepPurple,
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
         )),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Image(
-              image: AssetImage('asset/mario_head.png')
+          children: [
+            Image.asset(
+              splashImagePath,
+              width: splashImageSize,
+              height: splashImageSize,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: splashSeparator),
             Text(
-              'TMDB App',
+              splashTitle,
               style: TextStyle(
                 fontStyle: FontStyle.italic,
                 color: Colors.white,
-                fontSize: 32,
+                fontSize: splashFontSize,
               ),
             ),
           ],

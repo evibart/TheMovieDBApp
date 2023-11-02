@@ -6,17 +6,13 @@ import 'package:movie_db_app/src/data/datasource/local/dao/genre_dao.dart';
 
 import '../../../domain/entity/genre_entity.dart';
 import '../../../domain/entity/movie_entity.dart';
-import 'converter/genre_converter.dart';
 import 'converter/int_converter.dart';
-import 'converter/movie_converter.dart';
 import 'converter/string_converter.dart';
 import 'dao/movies_dao.dart';
 
 part 'app_database.g.dart';
 
 @TypeConverters([
-  GenreConverter,
-  MovieConverter,
   IntListConverter,
   StringListConverter,
 ])

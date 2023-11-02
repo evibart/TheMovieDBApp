@@ -1,6 +1,8 @@
 import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:movie_db_app/src/data/datasource/local/app_database.dart';
+import 'package:movie_db_app/src/data/repository/genre_database_repository.dart';
 import '../../../lib/src/domain/use_case/implementation/genre_use_case.dart';
 import '../../../lib/src/domain/use_case/genre_use_case_i.dart';
 import '../../../lib/src/data/datasource/remote/api_service.dart';
@@ -12,6 +14,8 @@ import '../../../lib/src/presentation/bloc/genre_bloc.dart';
 
 class MockGenreRepository extends Mock implements IGenreRepository {}
 
+class MockDatabaseGenreRepository extends Mock implements AppDataBase {}
+
 class MockListUseCase extends Mock implements GenreUseCaseI {}
 
 void main() async {
@@ -21,8 +25,9 @@ void main() async {
     setUp(() {
       _blocGenreList = GenreBloc(
           genreUseCase: GenreUseCase(
-              genreRepository:
-                  GenreRemoteRepository(apiService: ApiService())));
+              genreRepository: GenreRemoteRepository(apiService: ApiService()),
+              genreDatabaseRepository: GenreDatabaseRepository(
+                  appDataBase: MockDatabaseGenreRepository())));
     });
     test('fetchGenres adds genres to stream on success', () async {
       _blocGenreList.fetchGenres();
@@ -36,7 +41,7 @@ void main() async {
 
     test('fetchGenres adds empty list', () async {
       when(() => mockService.loadGenres()).thenAnswer(
-        (_) async => Right<String, List<GenreEntity>>([]),
+        (_) async => Right<Exception, List<GenreEntity>>([]),
       );
       final result = await mockService.loadGenres().fold(
             (error) => error,
@@ -49,7 +54,7 @@ void main() async {
     });
     test('fetchGenres adds error', () async {
       when(() => mockService.loadGenres()).thenAnswer(
-        (_) async => Left<String, List<GenreEntity>>('Error 404'),
+        (_) async => Left<Exception, List<GenreEntity>>(Exception('Error 404')),
       );
       final result = await mockService.loadGenres().fold(
             (error) => error,
@@ -57,7 +62,7 @@ void main() async {
           );
       expect(
         result,
-        'Error 404',
+        Exception('Error 404'),
       );
     });
     tearDown(() {
@@ -75,7 +80,7 @@ void main() async {
 
     test('fetchGenres adds genres to stream on success', () {
       when(() => mockListUseCase.execute()).thenAnswer(
-        (_) async => Right<String, List<GenreEntity>>([
+        (_) async => Right<Exception, List<GenreEntity>>([
           GenreEntity(
             id: 1,
             name: 'Action',
@@ -93,7 +98,7 @@ void main() async {
 
     test('fetchGenres adds error to stream on failure', () {
       when(() => mockListUseCase.execute()).thenAnswer(
-        (_) async => Left<String, List<GenreEntity>>('Error 404'),
+        (_) async => Left<Exception, List<GenreEntity>>(Exception('Error 404')),
       );
       bloc.fetchGenres();
       expectLater(

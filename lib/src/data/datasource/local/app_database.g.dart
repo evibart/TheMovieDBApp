@@ -238,7 +238,5 @@ class _$GenreDao extends GenreDao {
 }
 
 // ignore_for_file: unused_element
-final _genreConverter = GenreConverter();
-final _movieConverter = MovieConverter();
 final _intListConverter = IntListConverter();
 final _stringListConverter = StringListConverter();
