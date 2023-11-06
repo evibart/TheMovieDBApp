@@ -1,8 +1,8 @@
-import '../../core/util/either_response.dart';
 import '../../core/util/movie_enum.dart';
 import '../../domain/entity/movie_entity.dart';
 import '../../domain/repository/movie_repository_i.dart';
 import '../datasource/remote/api_service.dart';
+import '../model/data_state.dart';
 
 class MovieRemoteRepository implements IMovieRepository {
   final ApiService apiService;
@@ -16,7 +16,7 @@ class MovieRemoteRepository implements IMovieRepository {
     required this.apiService,
   });
 
-  EitherResponse<List<MovieEntity>> loadMovies(
+  Future<DataState<List<MovieEntity>>> loadMovies(
       {required MovieEndpoint movieEndpoint}) {
     switch (movieEndpoint) {
       case MovieEndpoint.popular:

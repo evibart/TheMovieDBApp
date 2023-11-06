@@ -1,7 +1,7 @@
-import '../../core/util/either_response.dart';
 import '../../domain/entity/genre_entity.dart';
 import '../../domain/repository/genre_repository_i.dart';
 import '../datasource/remote/api_service.dart';
+import '../model/data_state.dart';
 
 class GenreRemoteRepository implements IGenreRepository {
   final ApiService apiService;
@@ -10,7 +10,7 @@ class GenreRemoteRepository implements IGenreRepository {
   GenreRemoteRepository({required this.apiService});
 
   @override
-  EitherResponse<List<GenreEntity>> loadGenres() async {
+  Future<DataState<List<GenreEntity>>> loadGenres() async {
     return apiService.getGenres(baseUrl);
   }
 }

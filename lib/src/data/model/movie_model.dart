@@ -6,7 +6,7 @@ class MovieModel extends MovieEntity {
     required String title,
     required String originalTitle,
     required String overview,
-    required DateTime releaseDate,
+    required String releaseDate,
     required double voteAverage,
     required List<int> genres,
     required String poster,
@@ -31,6 +31,7 @@ class MovieModel extends MovieEntity {
           hasVideo: hasVideo,
           voteCount: voteCount,
           isAdult: isAdult,
+          categories: [],
         );
 
   factory MovieModel.fromJson(Map<String, dynamic> movieJson) {
@@ -39,7 +40,7 @@ class MovieModel extends MovieEntity {
       title: movieJson["title"],
       originalTitle: movieJson["original_title"],
       overview: movieJson["overview"],
-      releaseDate: DateTime.parse(movieJson["release_date"]),
+      releaseDate: movieJson["release_date"],
       voteAverage: movieJson["vote_average"].toDouble(),
       genres: movieJson["genre_ids"].cast<int>(),
       poster: movieJson["poster_path"],

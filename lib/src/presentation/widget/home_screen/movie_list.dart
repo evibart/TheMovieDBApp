@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/parameter/movie_screen_parameters.dart';
@@ -42,10 +43,21 @@ class MovieList extends StatelessWidget {
                   SizedBox(
                     height: movieBoxSize,
                     width: movieBoxSize,
-                    child: Image(
-                      image: NetworkImage(
-                        moviesList[index].posterUrl,
-                      ),
+                    child: CachedNetworkImage(
+                      imageUrl: moviesList[index].posterUrl,
+                      progressIndicatorBuilder: (
+                        BuildContext context,
+                        String url,
+                        DownloadProgress downloadProgress,
+                      ) =>
+                          CircularProgressIndicator(
+                              value: downloadProgress.progress),
+                      errorWidget: (
+                        BuildContext context,
+                        String url,
+                        Object error,
+                      ) =>
+                          Icon(Icons.error),
                     ),
                   ),
                 ],

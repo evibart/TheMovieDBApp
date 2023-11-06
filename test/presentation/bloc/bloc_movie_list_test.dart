@@ -1,10 +1,8 @@
-import 'package:either_dart/either.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../lib/src/data/model/data_state.dart';
 import '../../../lib/src/domain/use_case/implementation/movie_use_case.dart';
 import '../../../lib/src/core/util/movie_enum.dart';
-import '../../../lib/src/data/datasource/remote/api_service.dart';
-import '../../../lib/src/data/repository/movie_remote_repository.dart';
 import '../../../lib/src/domain/entity/movie_entity.dart';
 import '../../../lib/src/presentation/bloc/movie_bloc.dart';
 
@@ -13,13 +11,13 @@ class MockMoviesUseCase extends Mock implements MovieUseCase {}
 void main() async {
   group('bloc movie testing', () {
     late MovieBloc _blocMovieList;
+    late MockMoviesUseCase mockService;
+
     setUp(() {
-      MovieRemoteRepository movieRemoteRepository =
-          MovieRemoteRepository(apiService: ApiService());
-      _blocMovieList = MovieBloc(
-        moviesUseCase: MovieUseCase(movieRepository: movieRemoteRepository),
-      );
+      mockService = MockMoviesUseCase();
+      _blocMovieList = MovieBloc(moviesUseCase: mockService);
     });
+
     test('fetch popular Movies adds movies to stream correctly', () async {
       _blocMovieList.fetchMovies(MovieEndpoint.popular);
       _blocMovieList.allMovies.listen(expectAsync1((value) {
@@ -78,11 +76,7 @@ void main() async {
               "transported down a mysterious pipe and wander into a magical new "
               "world. But when the brothers are separated, Mario embarks on an epic "
               "quest to find Luigi.",
-          releaseDate: DateTime(
-            2023,
-            4,
-            5,
-          ),
+          releaseDate: '2023-4-5',
           voteAverage: 7.8,
           genres: [
             16,
@@ -99,13 +93,14 @@ void main() async {
           voteCount: 300,
           isAdult: false,
           id: -1,
+          categories: [],
         )
       ];
 
       when(() =>
               mockMoviesUseCase.execute(movieEndpoint: MovieEndpoint.popular))
           .thenAnswer(
-        (_) async => Right<String, List<MovieEntity>>(mockMovies),
+        (_) async => DataSuccess(mockMovies),
       );
 
       blocMovieList.fetchMovies(MovieEndpoint.popular);
@@ -119,7 +114,7 @@ void main() async {
       when(() =>
               mockMoviesUseCase.execute(movieEndpoint: MovieEndpoint.popular))
           .thenAnswer(
-        (_) async => Right<String, List<MovieEntity>>([]),
+        (_) async => DataSuccess([]),
       );
       blocMovieList.fetchMovies(MovieEndpoint.popular);
       await expectLater(
@@ -131,7 +126,7 @@ void main() async {
       when(() =>
               mockMoviesUseCase.execute(movieEndpoint: MovieEndpoint.popular))
           .thenAnswer(
-        (_) async => Left<String, List<MovieEntity>>('Error 404'),
+        (_) async => DataFailure(Exception('Error 404')),
       );
       blocMovieList.fetchMovies(MovieEndpoint.popular);
       await expectLater(
