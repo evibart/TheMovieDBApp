@@ -1,6 +1,6 @@
-import '../../core/util/either_response.dart';
+import '../../data/model/data_state.dart';
 import '../entity/genre_entity.dart';
 
 abstract class IGenreRepository {
-  EitherResponse<List<GenreEntity>> loadGenres();
+  Future<DataState<List<GenreEntity>>> loadGenres();
 }

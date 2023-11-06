@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'package:floor/floor.dart';
-import 'package:movie_db_app/src/data/datasource/local/dao/genre_dao.dart';
+import '../../../data/datasource/local/dao/genre_dao.dart';
 
 import '../../../domain/entity/genre_entity.dart';
 import '../../../domain/entity/movie_entity.dart';

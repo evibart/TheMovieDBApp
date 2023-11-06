@@ -1,4 +1,4 @@
-import 'package:movie_db_app/src/domain/entity/movie_entity.dart';
+import '../../domain/entity/movie_entity.dart';
 
 import '../../domain/repository/movie_database_repository_i.dart';
 import '../datasource/local/app_database.dart';

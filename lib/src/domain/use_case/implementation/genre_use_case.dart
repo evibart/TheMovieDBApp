@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:either_dart/either.dart';
 
-import '../../../core/util/either_response.dart';
+import '../../../data/model/data_state.dart';
 import '../../entity/genre_entity.dart';
 import '../../repository/genre_database_repository_i.dart';
 import '../../repository/genre_repository_i.dart';
@@ -19,27 +18,24 @@ class GenreUseCase implements GenreUseCaseI<List<GenreEntity>> {
   });
 
   @override
-  EitherResponse<List<GenreEntity>> execute() async {
+  Future<DataState<List<GenreEntity>>> execute() async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      try {
-        List<GenreEntity> genres = await genreDatabaseRepository.getGenres();
-        return Right(genres);
-      } catch (e) {
-        return Left(Exception(localDatabaseError));
-      }
+      final List<GenreEntity> genres =
+          await genreDatabaseRepository.getGenres();
+      return DataSuccess(genres);
     } else {
-      final Either<Exception, List<GenreEntity>> genres =
+      final DataState<List<GenreEntity>> genres =
           await genreRepository.loadGenres();
-      genres.fold((left) {}, (right) async {
-        for (GenreEntity genre in right) {
-          GenreEntity? DbGenre =
-              await genreDatabaseRepository.findGenreById(genre.id);
-          if (DbGenre == null) {
-            genreDatabaseRepository.saveGenre(genre);
-          }
+
+      for (GenreEntity genre in genres.data!) {
+        GenreEntity? DbGenre =
+            await genreDatabaseRepository.findGenreById(genre.id);
+        if (DbGenre == null) {
+          genreDatabaseRepository.saveGenre(genre);
         }
-      });
+      }
+
       return genres;
     }
   }

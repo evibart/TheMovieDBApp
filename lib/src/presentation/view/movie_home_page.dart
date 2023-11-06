@@ -23,31 +23,41 @@ class MovieHomePage extends StatelessWidget {
     );
     final List<MovieEntity> movies = args.movies;
     return MultiProvider(
-        providers: [
-          Provider(
-              create: (_) => GenreRemoteRepository(
-                  apiService: Provider.of<ApiService>(context))),
-          Provider(
-              create: (ctx) => GenreUseCase(
-                  genreRepository: Provider.of<GenreRemoteRepository>(
-                    ctx,
-                    listen: false,
-                  ),
-                  genreDatabaseRepository:
-                      Provider.of<GenreDatabaseRepository>(context))),
-        ],
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: movies.length,
-          itemBuilder: (
-            BuildContext context,
-            int index,
-          ) {
-            return Scaffold(
-              appBar: MovieAppBar(movieTitle: movies[index].title),
-              body: MovieBody(movie: movies[index]),
-            );
-          },
-        ));
+      providers: [
+        Provider(
+          create: (_) => GenreRemoteRepository(
+            apiService: Provider.of<ApiService>(
+              context,
+              listen: false,
+            ),
+          ),
+        ),
+        Provider(
+          create: (BuildContext context) => GenreUseCase(
+            genreRepository: Provider.of<GenreRemoteRepository>(
+              context,
+              listen: false,
+            ),
+            genreDatabaseRepository: Provider.of<GenreDatabaseRepository>(
+              context,
+              listen: false,
+            ),
+          ),
+        ),
+      ],
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: movies.length,
+        itemBuilder: (
+          BuildContext context,
+          int index,
+        ) {
+          return Scaffold(
+            appBar: MovieAppBar(movieTitle: movies[index].title),
+            body: MovieBody(movie: movies[index]),
+          );
+        },
+      ),
+    );
   }
 }

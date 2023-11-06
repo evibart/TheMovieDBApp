@@ -1,25 +1,37 @@
 import 'dart:async';
 
-import 'package:either_dart/either.dart';
-
+import '../../core/util/status.dart';
+import '../../data/model/data_state.dart';
+import '../../domain/entity/data.dart';
 import '../../domain/entity/genre_entity.dart';
-import '../../domain/use_case/genre_use_case_i.dart';
+import '../../domain/use_case/implementation/genre_use_case.dart';
 import 'bloc_i.dart';
 
 class GenreBloc implements IBloc {
-  final GenreUseCaseI genreUseCase;
-  final StreamController<List<GenreEntity>> _genreList =
-      StreamController<List<GenreEntity>>();
+  final GenreUseCase genreUseCase;
+  final StreamController<Data<List<GenreEntity>>> _genreList =
+      StreamController<Data<List<GenreEntity>>>();
 
-  Stream<List<GenreEntity>> get allGenres => _genreList.stream;
+  Stream<Data<List<GenreEntity>>> get allGenres => _genreList.stream;
+
+  Data<List<GenreEntity>> get initialData => Data<List<GenreEntity>>(
+        state: Status.loading,
+      );
 
   GenreBloc({required this.genreUseCase});
 
   void fetchGenres() async {
-    await genreUseCase.execute().fold(
-          (error) => _genreList.sink.addError(error),
-          (movieList) => _genreList.sink.add(movieList),
-        );
+    DataState<List<GenreEntity>> response = await genreUseCase.execute();
+    Data<List<GenreEntity>> data = response is DataFailure
+        ? Data(
+            state: Status.failed,
+            error: response.error.toString(),
+          )
+        : Data(
+            state: response.data!.isEmpty ? Status.empty : Status.success,
+            actualData: response.data);
+
+    _genreList.sink.add(data);
   }
 
   @override

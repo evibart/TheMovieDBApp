@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/util/constants.dart';
 import '../../core/util/movie_enum.dart';
+import '../../core/util/status.dart';
+import '../../domain/entity/data.dart';
 import '../../domain/entity/movie_entity.dart';
 import '../bloc/movie_bloc.dart';
 import '../widget/home_screen/movie_list.dart';
@@ -46,56 +49,60 @@ class _MovieListHomeState extends State<MovieListHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MovieListAppBar(
-        pageTitle: _movieEndpoint,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(child: Text(drawerTitle)),
-            ListTile(
-              title: Text(MovieEndpoint.popular.title),
-              key: Key(MovieEndpoint.popular.key),
-              onTap: () => _onDrawerItemTap(MovieEndpoint.popular),
-            ),
-            ListTile(
-              title: Text(MovieEndpoint.topRated.title),
-              key: Key(MovieEndpoint.topRated.key),
-              onTap: () => _onDrawerItemTap(MovieEndpoint.topRated),
-            ),
-            ListTile(
-              title: Text(MovieEndpoint.nowPlaying.title),
-              key: Key(MovieEndpoint.nowPlaying.key),
-              onTap: () => _onDrawerItemTap(MovieEndpoint.nowPlaying),
-            ),
-            ListTile(
-              title: Text(MovieEndpoint.upComing.title),
-              key: Key(MovieEndpoint.upComing.key),
-              onTap: () => _onDrawerItemTap(MovieEndpoint.upComing),
-            ),
-          ],
+        appBar: MovieListAppBar(
+          pageTitle: _movieEndpoint,
         ),
-      ),
-      body: StreamBuilder<List<MovieEntity>>(
-        stream: widget.movieBloc.allMovies,
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<List<MovieEntity>> snapshot,
-        ) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            return MovieList(
-              moviesList: snapshot.data!,
-            );
-          }
-          return Center(
-            child: Text(
-              snapshot.error.toString(),
-            ),
-          );
-        },
-      ),
-    );
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(child: Text(drawerTitle)),
+              ListTile(
+                title: Text(MovieEndpoint.popular.title),
+                key: Key(MovieEndpoint.popular.key),
+                onTap: () => _onDrawerItemTap(MovieEndpoint.popular),
+              ),
+              ListTile(
+                title: Text(MovieEndpoint.topRated.title),
+                key: Key(MovieEndpoint.topRated.key),
+                onTap: () => _onDrawerItemTap(MovieEndpoint.topRated),
+              ),
+              ListTile(
+                title: Text(MovieEndpoint.nowPlaying.title),
+                key: Key(MovieEndpoint.nowPlaying.key),
+                onTap: () => _onDrawerItemTap(MovieEndpoint.nowPlaying),
+              ),
+              ListTile(
+                title: Text(MovieEndpoint.upComing.title),
+                key: Key(MovieEndpoint.upComing.key),
+                onTap: () => _onDrawerItemTap(MovieEndpoint.upComing),
+              ),
+            ],
+          ),
+        ),
+        body: StreamBuilder<Data<List<MovieEntity>>>(
+            initialData: widget.movieBloc.initialData,
+            stream: widget.movieBloc.allMovies,
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<Data<List<MovieEntity>>> snapshot,
+            ) {
+              switch (snapshot.data!.state) {
+                case Status.loading:
+                  return const Center(child: CircularProgressIndicator());
+                case Status.failed:
+                  return Center(
+                    child: Text(
+                      snapshot.error.toString(),
+                    ),
+                  );
+
+                case Status.empty:
+                  return Center(child: Text(Constants.emptyError));
+                case Status.success:
+                  return MovieList(
+                    moviesList: snapshot.data!.actualData!,
+                  );
+              }
+            }));
   }
 }

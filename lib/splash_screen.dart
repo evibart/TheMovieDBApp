@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:movie_db_app/my_app.dart';
+import 'my_app.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -21,13 +21,17 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     Future.delayed(
-        const Duration(seconds: splashScreenDuration), navigateToNextScreen);
+      const Duration(seconds: splashScreenDuration),
+      navigateToNextScreen,
+    );
   }
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
     super.dispose();
   }
 

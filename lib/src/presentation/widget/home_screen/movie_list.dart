@@ -45,11 +45,19 @@ class MovieList extends StatelessWidget {
                     width: movieBoxSize,
                     child: CachedNetworkImage(
                       imageUrl: moviesList[index].posterUrl,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) =>
-                              CircularProgressIndicator(
-                                  value: downloadProgress.progress),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      progressIndicatorBuilder: (
+                        BuildContext context,
+                        String url,
+                        DownloadProgress downloadProgress,
+                      ) =>
+                          CircularProgressIndicator(
+                              value: downloadProgress.progress),
+                      errorWidget: (
+                        BuildContext context,
+                        String url,
+                        Object error,
+                      ) =>
+                          Icon(Icons.error),
                     ),
                   ),
                 ],

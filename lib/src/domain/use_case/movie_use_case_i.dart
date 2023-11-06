@@ -1,6 +1,6 @@
-import '../../core/util/either_response.dart';
 import '../../core/util/movie_enum.dart';
+import '../../data/model/data_state.dart';
 
 abstract class MovieUseCaseI<T> {
-  EitherResponse<T> execute({required MovieEndpoint movieEndpoint});
+  Future<DataState<T>> execute({required MovieEndpoint movieEndpoint});
 }

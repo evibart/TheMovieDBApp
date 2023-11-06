@@ -1,4 +1,4 @@
-import 'package:movie_db_app/src/domain/entity/genre_entity.dart';
+import '../../domain/entity/genre_entity.dart';
 
 import '../../domain/repository/genre_database_repository_i.dart';
 import '../datasource/local/app_database.dart';
@@ -7,6 +7,7 @@ class GenreDatabaseRepository implements IGenreDatabaseRepository {
   final AppDataBase appDataBase;
 
   GenreDatabaseRepository({required this.appDataBase});
+
   @override
   Future<List<GenreEntity>> getGenres() {
     return appDataBase.genreDao.getGenres();
@@ -21,5 +22,4 @@ class GenreDatabaseRepository implements IGenreDatabaseRepository {
   Future<GenreEntity?> findGenreById(int id) {
     return appDataBase.genreDao.findGenreById(id);
   }
-
 }
