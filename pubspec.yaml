@@ -43,11 +43,16 @@ dependencies:
   connectivity_plus: ^5.0.1
   sqflite: ^2.3.0
   cached_network_image: ^3.3.0
+  flutter_riverpod: any
+  riverpod_annotation: any
+
 
 dev_dependencies:
   lint: ^2.0.0
   floor_generator: ^1.2.0
+  riverpod_generator: any
   build_runner: ^2.4.6
+  analyzer: any
   flutter_test:
     sdk: flutter
 

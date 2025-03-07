@@ -1,25 +1,37 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../domain/entity/genre_entity.dart';
 
 import '../../domain/repository/genre_database_repository_i.dart';
-import '../datasource/local/app_database.dart';
+import '../datasource/local/dao/genre_dao.dart';
+import '../datasource/local/database_provider.dart';
+
+part 'genre_database_repository.g.dart';
 
 class GenreDatabaseRepository implements IGenreDatabaseRepository {
-  final AppDataBase appDataBase;
+  final GenreDao genreDao;
 
-  GenreDatabaseRepository({required this.appDataBase});
+  GenreDatabaseRepository({required this.genreDao});
 
   @override
   Future<List<GenreEntity>> getGenres() {
-    return appDataBase.genreDao.getGenres();
+    return genreDao.getGenres();
   }
 
   @override
   Future<void> saveGenre(GenreEntity genre) {
-    return appDataBase.genreDao.saveGenre(genre);
+    return genreDao.saveGenre(genre);
   }
 
   @override
   Future<GenreEntity?> findGenreById(int id) {
-    return appDataBase.genreDao.findGenreById(id);
+    return genreDao.findGenreById(id);
   }
 }
+
+@riverpod
+GenreDatabaseRepository genreDatabaseRepository(
+        GenreDatabaseRepositoryRef ref) =>
+    GenreDatabaseRepository(
+      genreDao: ref.watch(databaseProvider.notifier).database!.genreDao,
+    );

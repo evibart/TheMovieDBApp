@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/entity/movie_entity.dart';
 import '../../../domain/use_case/implementation/genre_use_case.dart';
@@ -9,7 +9,7 @@ import 'likes_rating.dart';
 import 'movie_genres.dart';
 import 'movie_info.dart';
 
-class MovieBody extends StatelessWidget {
+class MovieBody extends ConsumerWidget {
   final MovieEntity movie;
   static const double boxErrorIconSize = 150;
   static const double errorIconSize = 100;
@@ -20,7 +20,7 @@ class MovieBody extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref,) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -60,7 +60,7 @@ class MovieBody extends StatelessWidget {
               MovieGenres(
                 movieGenres: movie.genres,
                 blocGenreList:
-                    GenreBloc(genreUseCase: Provider.of<GenreUseCase>(context)),
+                    GenreBloc(genreUseCase: ref.watch(genreUseCaseProvider)),
               ),
             ],
           ),

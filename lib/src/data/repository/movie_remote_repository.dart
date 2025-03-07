@@ -1,8 +1,12 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../core/util/movie_enum.dart';
 import '../../domain/entity/movie_entity.dart';
 import '../../domain/repository/movie_repository_i.dart';
 import '../datasource/remote/api_service.dart';
 import '../model/data_state.dart';
+
+part 'movie_remote_repository.g.dart';
 
 class MovieRemoteRepository implements IMovieRepository {
   final ApiService apiService;
@@ -30,3 +34,7 @@ class MovieRemoteRepository implements IMovieRepository {
     }
   }
 }
+
+@riverpod
+IMovieRepository movieRemoteRepository(MovieRemoteRepositoryRef ref) =>
+    MovieRemoteRepository(apiService: ref.watch(apiServiceProvider));

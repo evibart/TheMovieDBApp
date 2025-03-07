@@ -1,12 +1,17 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../data/model/data_state.dart';
 
 import '../../../core/util/movie_enum.dart';
 
+import '../../../data/repository/movie_database_repository.dart';
+import '../../../data/repository/movie_remote_repository.dart';
 import '../../entity/movie_entity.dart';
 import '../../repository/movie_database_repository_i.dart';
 import '../../repository/movie_repository_i.dart';
 import '../movie_use_case_i.dart';
+
+part 'movie_use_case.g.dart';
 
 class MovieUseCase implements MovieUseCaseI<List<MovieEntity>> {
   final IMovieRepository movieRepository;
@@ -46,4 +51,12 @@ class MovieUseCase implements MovieUseCaseI<List<MovieEntity>> {
       return movies;
     }
   }
+}
+
+@riverpod
+MovieUseCase movieUseCase(MovieUseCaseRef ref) {
+  return MovieUseCase(
+    movieRepository: ref.watch(movieRemoteRepositoryProvider),
+    movieDataBase: ref.watch(movieDatabaseRepositoryProvider),
+  );
 }

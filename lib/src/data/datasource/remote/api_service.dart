@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/entity/genre_entity.dart';
 import '../../../domain/entity/movie_entity.dart';
 import '../../model/data_state.dart';
 import '../../model/genre_model.dart';
 import '../../model/movie_model.dart';
+
+part 'api_service.g.dart';
 
 class ApiService {
   static const String apiKey = '?api_key=802b2c4b88ea1183e50e6b285a27696e';
@@ -49,3 +52,6 @@ class ApiService {
     }
   }
 }
+
+@riverpod
+ApiService apiService(ApiServiceRef ref) => ApiService();

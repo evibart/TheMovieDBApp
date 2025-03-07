@@ -6,21 +6,32 @@ part of 'app_database.dart';
 // FloorGenerator
 // **************************************************************************
 
+abstract class $AppDataBaseBuilderContract {
+  /// Adds migrations to the builder.
+  $AppDataBaseBuilderContract addMigrations(List<Migration> migrations);
+
+  /// Adds a database [Callback] to the builder.
+  $AppDataBaseBuilderContract addCallback(Callback callback);
+
+  /// Creates the database and initializes it.
+  Future<AppDataBase> build();
+}
+
 // ignore: avoid_classes_with_only_static_members
 class $FloorAppDataBase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$AppDataBaseBuilder databaseBuilder(String name) =>
+  static $AppDataBaseBuilderContract databaseBuilder(String name) =>
       _$AppDataBaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$AppDataBaseBuilder inMemoryDatabaseBuilder() =>
+  static $AppDataBaseBuilderContract inMemoryDatabaseBuilder() =>
       _$AppDataBaseBuilder(null);
 }
 
-class _$AppDataBaseBuilder {
+class _$AppDataBaseBuilder implements $AppDataBaseBuilderContract {
   _$AppDataBaseBuilder(this.name);
 
   final String? name;
@@ -29,19 +40,19 @@ class _$AppDataBaseBuilder {
 
   Callback? _callback;
 
-  /// Adds migrations to the builder.
-  _$AppDataBaseBuilder addMigrations(List<Migration> migrations) {
+  @override
+  $AppDataBaseBuilderContract addMigrations(List<Migration> migrations) {
     _migrations.addAll(migrations);
     return this;
   }
 
-  /// Adds a database [Callback] to the builder.
-  _$AppDataBaseBuilder addCallback(Callback callback) {
+  @override
+  $AppDataBaseBuilderContract addCallback(Callback callback) {
     _callback = callback;
     return this;
   }
 
-  /// Creates the database and initializes it.
+  @override
   Future<AppDataBase> build() async {
     final path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name!)

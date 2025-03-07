@@ -1,10 +1,15 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../data/model/data_state.dart';
+import '../../../data/repository/genre_database_repository.dart';
+import '../../../data/repository/genre_remote_repository.dart';
 import '../../entity/genre_entity.dart';
 import '../../repository/genre_database_repository_i.dart';
 import '../../repository/genre_repository_i.dart';
 import '../genre_use_case_i.dart';
+
+part 'genre_use_case.g.dart';
 
 class GenreUseCase implements GenreUseCaseI<List<GenreEntity>> {
   final IGenreRepository genreRepository;
@@ -39,4 +44,12 @@ class GenreUseCase implements GenreUseCaseI<List<GenreEntity>> {
       return genres;
     }
   }
+}
+
+@riverpod
+GenreUseCase genreUseCase(GenreUseCaseRef ref) {
+  return GenreUseCase(
+    genreRepository: ref.watch(genreRemoteRepositoryProvider),
+    genreDatabaseRepository: ref.watch(genreDatabaseRepositoryProvider),
+  );
 }

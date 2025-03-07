@@ -35,7 +35,8 @@ class MovieBloc implements IBloc {
           )
         : Data(
             state: response.data!.isEmpty ? Status.empty : Status.success,
-            actualData: response.data);
+            actualData: response.data,
+          );
 
     _movieList.sink.add(data);
   }
