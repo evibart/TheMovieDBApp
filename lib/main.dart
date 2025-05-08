@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
-import 'my_app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'splash_screen.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(ProviderScope(child: MaterialApp(home: SplashScreen())));
+}

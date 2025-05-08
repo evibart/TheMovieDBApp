@@ -7,4 +7,6 @@ class Constants {
   static const String originalTitleKey = 'Title';
   static const String overviewKey = 'Overview';
   static const String releaseDateKey = 'ReleaseDate';
+  static const String databaseName = 'MovieDatabase';
+  static const String emptyError = 'No data available';
 }

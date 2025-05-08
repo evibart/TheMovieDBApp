@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/util/constants.dart';
@@ -28,10 +29,20 @@ class MovieInfo extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius),
           child: SizedBox(
             width: posterWidth,
-            child: Image(
-              image: NetworkImage(
-                poster,
-              ),
+            child: CachedNetworkImage(
+              imageUrl: poster,
+              progressIndicatorBuilder: (
+                context,
+                url,
+                downloadProgress,
+              ) =>
+                  CircularProgressIndicator(value: downloadProgress.progress),
+              errorWidget: (
+                context,
+                url,
+                error,
+              ) =>
+                  Icon(Icons.error),
             ),
           ),
         ),

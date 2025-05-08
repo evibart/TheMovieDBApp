@@ -1,15 +1,20 @@
-import 'package:flutter/foundation.dart';
+import 'package:floor/floor.dart';
+import 'package:json_class/json_class.dart';
 
+import '../../data/datasource/local/converter/int_converter.dart';
 import '../../data/model/movie_model.dart';
 
-class MovieEntity {
+@entity
+class MovieEntity extends JsonClass {
   static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  @primaryKey
   final int id;
   final String title;
   final String originalTitle;
   final String overview;
-  final DateTime releaseDate;
+  final String releaseDate;
   final double voteAverage;
+  @TypeConverters([IntListConverter])
   final List<int> genres;
   final String poster;
   final String backdrop;
@@ -18,6 +23,8 @@ class MovieEntity {
   final bool hasVideo;
   final int voteCount;
   final bool isAdult;
+  List<String> categories;
+
 
   MovieEntity({
     required this.id,
@@ -34,6 +41,7 @@ class MovieEntity {
     required this.hasVideo,
     required this.voteCount,
     required this.isAdult,
+    required this.categories,
   });
 
   factory MovieEntity.fromMovieModel({required MovieModel movieModel}) =>
@@ -52,10 +60,8 @@ class MovieEntity {
         hasVideo: movieModel.hasVideo,
         voteCount: movieModel.voteCount,
         isAdult: movieModel.isAdult,
+        categories: [],
       );
-
-  String get movieReleaseDate =>
-      '${releaseDate.day}/${releaseDate.month}/${releaseDate.year}';
 
   String get posterUrl => '$imageBaseUrl$poster';
 
@@ -64,35 +70,28 @@ class MovieEntity {
   @override
   bool operator ==(Object other) =>
       other is MovieEntity &&
-      id == other.id &&
-      title == other.title &&
-      originalTitle == other.originalTitle &&
-      overview == other.overview &&
-      releaseDate == other.releaseDate &&
-      voteAverage == other.voteAverage &&
-      listEquals(genres, other.genres) &&
-      poster == other.poster &&
-      backdrop == other.backdrop &&
-      originalLanguage == other.originalLanguage &&
-      popularity == other.popularity &&
-      hasVideo == other.hasVideo &&
-      voteCount == other.voteCount &&
-      isAdult == other.isAdult;
+          id == other.id;
+
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      title.hashCode ^
-      originalTitle.hashCode ^
-      overview.hashCode ^
-      releaseDate.hashCode ^
-      voteAverage.hashCode ^
-      genres.hashCode ^
-      poster.hashCode ^
-      backdrop.hashCode ^
-      originalLanguage.hashCode ^
-      popularity.hashCode ^
-      hasVideo.hashCode ^
-      voteCount.hashCode ^
-      isAdult.hashCode;
+  int get hashCode => id.hashCode;
+
+  @override
+  Map<String, dynamic> toJson() =>
+      {
+        'id': id,
+        'title': title,
+        'original_title': originalTitle,
+        'overview': overview,
+        'release_date': releaseDate,
+        'vote_average': voteAverage,
+        'genre_ids': genres,
+        'poster_path': poster,
+        'backdrop_path': backdrop,
+        'original_language': originalLanguage,
+        'popularity': popularity,
+        'video': hasVideo,
+        'vote_count': voteCount,
+        'adult': isAdult,
+      };
 }

@@ -1,5 +1,5 @@
-import '../../core/util/either_response.dart';
+import '../../data/model/data_state.dart';
 
 abstract class GenreUseCaseI<T> {
-  EitherResponse<T> execute();
+  Future<DataState<T>> execute();
 }

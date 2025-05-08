@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/util/constants.dart';
 import '../../core/util/movie_enum.dart';
+import '../../core/util/status.dart';
+import '../../domain/entity/data.dart';
 import '../../domain/entity/movie_entity.dart';
 import '../bloc/movie_bloc.dart';
 import '../widget/home_screen/movie_list.dart';
@@ -76,24 +79,29 @@ class _MovieListHomeState extends State<MovieListHome> {
           ],
         ),
       ),
-      body: StreamBuilder<List<MovieEntity>>(
+      body: StreamBuilder<Data<List<MovieEntity>>>(
+        initialData: widget.movieBloc.initialData,
         stream: widget.movieBloc.allMovies,
         builder: (
           BuildContext context,
-          AsyncSnapshot<List<MovieEntity>> snapshot,
+          AsyncSnapshot<Data<List<MovieEntity>>> snapshot,
         ) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            return MovieList(
-              moviesList: snapshot.data!,
-            );
+          switch (snapshot.data!.state) {
+            case Status.loading:
+              return const Center(child: CircularProgressIndicator());
+            case Status.failed:
+              return Center(
+                child: Text(
+                  snapshot.error.toString(),
+                ),
+              );
+            case Status.empty:
+              return Center(child: Text(Constants.emptyError));
+            case Status.success:
+              return MovieList(
+                moviesList: snapshot.data!.actualData!,
+              );
           }
-          return Center(
-            child: Text(
-              snapshot.error.toString(),
-            ),
-          );
         },
       ),
     );

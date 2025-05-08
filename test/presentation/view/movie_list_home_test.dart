@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../lib/src/domain/entity/data.dart';
 import '../../../lib/src/domain/entity/movie_entity.dart';
 import '../../../lib/src/presentation/bloc/movie_bloc.dart';
 import '../../../lib/src/presentation/view/movie_list_home.dart';
@@ -22,11 +23,7 @@ void main() {
         originalLanguage: 'English',
         originalTitle: 'title',
         popularity: 200,
-        releaseDate: DateTime(
-          2023,
-          8,
-          9,
-        ),
+        releaseDate: '2023-8-9',
         title: 'title',
         hasVideo: false,
         voteCount: 200,
@@ -36,6 +33,7 @@ void main() {
         poster: '',
         backdrop: '',
         isAdult: false,
+        categories: [],
       ),
     ];
     await mockNetworkImagesFor(() => tester.pumpWidget(MaterialApp(
@@ -51,7 +49,7 @@ void main() {
 
   testWidgets('Drawer should open and show items', (WidgetTester tester) async {
     when(() => mockBlocMovieList.allMovies).thenAnswer(
-      (_) => Stream<List<MovieEntity>>.empty(),
+      (_) => Stream<Data<List<MovieEntity>>>.empty(),
     );
     await tester.pumpWidget(MaterialApp(
       home: MovieListHome(
@@ -97,7 +95,7 @@ void main() {
   testWidgets('MovieListHome displays loading indicator',
       (WidgetTester tester) async {
     when(() => mockBlocMovieList.allMovies).thenAnswer(
-      (_) => Stream<List<MovieEntity>>.empty(),
+      (_) => Stream<Data<List<MovieEntity>>>.empty(),
     );
 
     await tester.pumpWidget(

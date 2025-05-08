@@ -17,7 +17,7 @@ void main() {
   group('MovieInfo Widget', () {
     testWidgets('Renders MovieInfo widget', (WidgetTester tester) async {
       when(() => movie.originalTitle).thenReturn('Title');
-      when(() => movie.releaseDate).thenReturn(DateTime(2023, 8, 9));
+      when(() => movie.releaseDate).thenReturn('2023-8-9');
       when(() => movie.poster).thenReturn('');
       when(() => movie.overview).thenReturn('Description');
       await mockNetworkImagesFor(() => tester.pumpWidget(MaterialApp(

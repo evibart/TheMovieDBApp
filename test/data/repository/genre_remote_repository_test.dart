@@ -1,7 +1,6 @@
-import 'package:either_dart/either.dart';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import '../../../lib/src/data/model/data_state.dart';
 import '../../../lib/src/data/datasource/remote/api_service.dart';
 import '../../../lib/src/data/repository/genre_remote_repository.dart';
 import '../../../lib/src/domain/entity/genre_entity.dart';
@@ -29,72 +28,60 @@ void main() {
           name: "Drama",
         ),
       ];
-
       when(() => mockApiService.getGenres(
           'https://api.themoviedb.org/3/genre/movie/list')).thenAnswer(
-        (_) async => Right(genreData),
+        (_) async => DataSuccess(genreData),
       );
 
       final result = await genreRemoteRepository.loadGenres();
 
       expect(
         result,
-        isA<Right<String, List<GenreEntity>>>(),
+        isA<DataSuccess>(),
       );
-      result.fold(
-        (error) {
-          fail('Expected success, but got error: $error');
-        },
-        (genres) {
-          expect(
-            genres,
-            [
-              GenreEntity(
-                id: 1,
-                name: 'Action',
-              ),
-              GenreEntity(
-                id: 2,
-                name: 'Drama',
-              ),
-            ],
-          );
-        },
+
+      expect(
+        result.data,
+        [
+          GenreEntity(
+            id: 1,
+            name: 'Action',
+          ),
+          GenreEntity(
+            id: 2,
+            name: 'Drama',
+          ),
+        ],
       );
     });
     test('loadGenres returns an empty list of genres on success', () async {
       final List<GenreEntity> genreData = [];
       when(() => mockApiService
               .getGenres('https://api.themoviedb.org/3/genre/movie/list'))
-          .thenAnswer((_) async => Right(genreData));
+          .thenAnswer((_) async => DataSuccess(genreData));
       final result = await genreRemoteRepository.loadGenres();
-      result.fold((error) {
-        fail('Expected success, but got error: $error');
-      }, (genres) {
-        expect(
-          genres,
-          [],
-        );
-      });
+
+      expect(
+        result.data,
+        [],
+      );
     });
 
     test('loadGenres returns an error on failure', () async {
+      Exception exception = Exception('Error 404');
       when(() => mockApiService
               .getGenres('https://api.themoviedb.org/3/genre/movie/list'))
-          .thenAnswer((_) async => Left('Error 404'));
+          .thenAnswer((_) async => DataFailure(exception));
 
       final result = await genreRemoteRepository.loadGenres();
 
       expect(
         result,
-        isA<Left<String, List<GenreEntity>>>(),
+        isA<DataFailure>,
       );
       expect(
-        result.fold(
-          (error) => error,
-          (_) => '',
-        ),
         'Error 404',
+        result.error.toString(),
       );
     });
   });

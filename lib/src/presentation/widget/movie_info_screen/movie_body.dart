@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/datasource/remote/api_service.dart';
-import '../../../data/repository/genre_remote_repository.dart';
 import '../../../domain/entity/movie_entity.dart';
 import '../../../domain/use_case/implementation/genre_use_case.dart';
 import '../../bloc/genre_bloc.dart';
@@ -9,8 +9,10 @@ import 'likes_rating.dart';
 import 'movie_genres.dart';
 import 'movie_info.dart';
 
-class MovieBody extends StatelessWidget {
+class MovieBody extends ConsumerWidget {
   final MovieEntity movie;
+  static const double boxErrorIconSize = 150;
+  static const double errorIconSize = 100;
 
   const MovieBody({
     super.key,
@@ -18,32 +20,47 @@ class MovieBody extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref,) {
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Image(
-                image: NetworkImage(
-                  movie.backdropUrl,
+              CachedNetworkImage(
+                imageUrl: movie.backdropUrl,
+                progressIndicatorBuilder: (
+                  context,
+                  url,
+                  downloadProgress,
+                ) =>
+                    CircularProgressIndicator(value: downloadProgress.progress),
+                errorWidget: (
+                  context,
+                  url,
+                  error,
+                ) =>
+                    SizedBox(
+                  height: errorIconSize,
+                  width: errorIconSize,
+                  child: Icon(
+                    Icons.error,
+                    size: errorIconSize,
+                  ),
                 ),
               ),
               MovieInfo(
                 poster: movie.posterUrl,
                 originalTitle: movie.originalTitle,
                 overview: movie.overview,
-                releaseDate: movie.movieReleaseDate,
+                releaseDate: movie.releaseDate,
               ),
               LikeAndRating(
                 voteAverage: movie.voteAverage,
               ),
               MovieGenres(
                 movieGenres: movie.genres,
-                blocGenreList: GenreBloc(
-                    genreListUseCase: GenreUseCase(
-                        genreRepository:
-                            GenreRemoteRepository(apiService: ApiService()))),
+                blocGenreList:
+                    GenreBloc(genreUseCase: ref.watch(genreUseCaseProvider)),
               ),
             ],
           ),
